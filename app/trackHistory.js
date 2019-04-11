@@ -9,33 +9,38 @@ const router = express.Router();
 
 
 router.post('/', async (req, res) => {
-    const token = req.get("Token");
+    try {
+        const token = req.get("Token");
 
-    if (!token) {
-        return res.status(401).send({error: 'Token headers not present'})
-    }
+        if (!token) {
+            return res.status(401).send({error: 'Token headers not present'})
+        }
 
-    const user = await User.findOne({token});
+        const user = await User.findOne({token});
 
-    if (!user) {
-        return res.status(401).send({error: 'Token incorrect'})
-    }
+        if (!user) {
+            return res.status(401).send({error: 'Token incorrect'})
+        }
 
-    const track = await Track.findOne({});
+        const track = await Track.findById(req.body.track);
 
-    if (!track) {
-        return res.status(401).send({error: 'Track not found'})
-    }
+        if (!track) {
+            return res.status(401).send({error: 'Track not found'})
+        }
 
-    const trackHistory  = {
-        user: user._id,
-        track: req.body.track,
-        datetime: new Date().toISOString()
-    };
+        const trackHistory  = {
+            user: user._id,
+            track: req.body.track,
+            datetime: new Date().toISOString()
+        };
         const history = new History(trackHistory);
-         history.save(trackHistory)
-             .then((result) => res.send(result))
-             .catch(e => res.status(500).send(e))
+        await history.save();
+
+        res.send(history)
+
+    } catch (e) {
+        res.send({message: 'Error happened'})
+    }
 });
 
 
