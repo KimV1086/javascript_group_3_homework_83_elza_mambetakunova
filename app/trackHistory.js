@@ -7,6 +7,12 @@ const Track = require('../models/Track');
 
 const router = express.Router();
 
+router.get('/', (req, res) => {
+    History.find()
+        .then(artists => res.send(artists))
+        .catch(() => res.sendStatus(500))
+});
+
 
 router.post('/', async (req, res) => {
     try {
