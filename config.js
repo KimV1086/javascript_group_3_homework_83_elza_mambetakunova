@@ -6,5 +6,5 @@ module.exports = {
     rootPath,
     uploadPath: path.join(rootPath, 'public/uploads'),
     dbUrl: 'mongodb://localhost/musicApp',
-    mongoOptions: {useNewUrlParser: true}
+    mongoOptions: {useNewUrlParser: true, useCreateIndex: true}
 };
